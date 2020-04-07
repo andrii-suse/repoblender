@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  install_all_in_docker:
+    machine:
+      image: ubuntu-1604:201903-01
+    environment:
+      OBSPROJECT: Apache:Test
+      OBSREPO: openSUSE_Leap_15.1
+    steps:
+      - checkout
+      - run:
+          command: |
+            scripts/setup_repo_environ.sh $OBSPROJECT $OBSREPO
+            $OBSPROJECT/$OBSREPO/wget.sh
+            $OBSPROJECT/$OBSREPO/test-install-all-in-docker.sh
+
+  install_all_in_15_1:
+    docker:
+      - image: opensuse/leap:15.1
+    environment:
+      OBSPROJECT: Apache:Test
+      OBSREPO: openSUSE_Leap_15.1
+    steps:
+      - run: zypper -n install git-core wget tar m4
+      - checkout
+      - run:
+          command: |
+            scripts/setup_repo_environ.sh $OBSPROJECT $OBSREPO
+            $OBSPROJECT/$OBSREPO/wget.sh
+            $OBSPROJECT/$OBSREPO/test-install-all.sh
+workflows:
+  version: 2.1
+  test:
+    jobs:
+      - install_all_in_docker
+      - install_all_in_15_1
