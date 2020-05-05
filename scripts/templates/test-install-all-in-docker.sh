@@ -11,7 +11,7 @@ docker ps >/dev/null || exit 1 # Docker doesn't seem to be running
 echo __container
 (
 cat << 'EOF'
-FROM opensuse/__container
+FROM __container
 ENV container docker
 ENV LANG en_US.UTF-8
 

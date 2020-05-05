@@ -29,9 +29,25 @@ jobs:
             scripts/setup_repo_environ.sh $OBSPROJECT $OBSREPO
             $OBSPROJECT/$OBSREPO/wget.sh
             $OBSPROJECT/$OBSREPO/test-install-all.sh
+
+  test_mb_in_docker:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          command: |
+            scripts/setup_repo_environ.sh Apache:MirrorBrain:development openSUSE_Leap_15.1
+            Apache:MirrorBrain:development/openSUSE_Leap_15.1/test-environs-in-docker.sh
+      - run:
+          command: |
+            scripts/setup_repo_environ.sh Apache:MirrorBrain:development openSUSE_Tumbleweed
+            Apache:MirrorBrain:development/openSUSE_Tumbleweed/test-environs-in-docker.sh
+
 workflows:
   version: 2.1
   test:
     jobs:
       - install_all_in_docker
       - install_all_in_15_1
+      - test_mb_in_docker
